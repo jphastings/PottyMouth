@@ -1,7 +1,9 @@
 require 'rubygems'
 require 'active_record'
 
-ActiveRecord::Base.establish_connection(YAML::load(File.open('config/database.yml'))[ENV['ENVIRONMENT'] || 'development'])
+dbconfig = YAML::load(File.open('config/database.yml'))
+
+ActiveRecord::Base.establish_connection dbconfig[ENV['ENVIRONMENT'] || 'production']
 
 class Repo < ActiveRecord::Base
   has_many :swears
