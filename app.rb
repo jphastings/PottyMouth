@@ -30,10 +30,12 @@ post '/posthook' do
   )
 end
 
-get '/' do
+get '/' do  
+  haml :index
+end
+
+get '/graphs/overview.png' do
   require 'google_chart'
   
-  graph = pie_chart(Swear.count(:group => :swear))
-  
-  "<img src=\"#{graph}\" />"
+  redirect pie_chart(Swear.count(:group => :swear)), 307
 end
