@@ -2,6 +2,7 @@ require 'rubygems'
 require 'sinatra'
 require 'json'
 require 'db'
+require 'haml'
 
 helpers do
   def pie_chart(counts)
@@ -31,7 +32,7 @@ post '/posthook' do
 end
 
 get '/' do  
-  haml :index
+  haml :home
 end
 
 get '/graphs/overview.png' do
