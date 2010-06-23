@@ -3,8 +3,11 @@ task :migrate => :environment do
   require 'active_record'
   require 'yaml'
   
-  ActiveRecord::Base.establish_connection(YAML::load(File.open('config/database.yml'))[ENV['ENVIRONMENT'] || 'development'])
-  ActiveRecord::Base.logger = Logger.new(STDOUT)
+  dbconfig = YAML::load(File.open('config/database.yml'))
+
+  ActiveRecord::Base.establish_connection dbconfig[ENV['ENVIRONMENT'] || 'production']
+  
+  #ActiveRecord::Base.logger = Logger.new(STDOUT)
   
   ActiveRecord::Migrator.migrate('db/migrate', ENV["VERSION"] ? ENV["VERSION"].to_i : nil )
 end
