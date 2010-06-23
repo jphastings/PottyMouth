@@ -4,6 +4,8 @@ require 'json'
 require 'db'
 require 'haml'
 
+set :sass, {:style => :compact }
+
 helpers do
   def pie_chart(counts)
     graph = ""
@@ -31,7 +33,7 @@ post '/posthook' do
   )
 end
 
-get '/' do  
+get '/' do
   haml :home
 end
 
