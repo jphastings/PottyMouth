@@ -4,7 +4,7 @@ require 'fileutils'
 
 def check_repo(details)
   # Don't do the same one twice
-  #return if Repo.count(:name => details[:repo], :user => details[:user],:repo_hash => details[:hash]) > 0
+  return if Repo.count(:conditions => ["name = ? AND user = ? and repo_hash = ?",details[:repo],details[:user],details[:hash]]) > 0
     
   re = //
   open("words.txt") do |f|
