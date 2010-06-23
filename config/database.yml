@@ -8,3 +8,6 @@ test:
     host: localhost
     username: jp
     database: linkit
+production:
+    adapter: postgresql
+    host: localhost
