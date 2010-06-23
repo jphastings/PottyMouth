@@ -42,3 +42,15 @@ get '/graphs/overview.png' do
   
   redirect pie_chart(Swear.count(:group => :swear)), 307
 end
+
+=begin
+get '/external/github/:user/:repo' do
+  require 'search_and_update'
+  check_repo(
+    :giturl => "git://github.com/#{params[:user]}/#{params[:repo]}.git",
+    :repo   => params[:repo],
+    :user   => params[:user],
+    :hash   => "" # need to change this?
+  )
+end
+=end
