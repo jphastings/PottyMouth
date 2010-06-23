@@ -9,7 +9,7 @@ task :migrate => :environment do
   
   #ActiveRecord::Base.logger = Logger.new(STDOUT)
   
-  ActiveRecord::Migrator.migrate('db/migrate', ENV["VERSION"] ? ENV["VERSION"].to_i : nil )
+  ActiveRecord::Migrator.migrate('db/migrate', ENV["VERSION"] ? ENV["VERSION"].to_i : 0 )
 end
 
 task :environment do
