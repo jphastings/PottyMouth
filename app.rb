@@ -11,8 +11,8 @@ helpers do
     pc = GoogleChart::PieChart.new('540x400', title,false)
     # How the shitsticks am I supposed to get lots of exciting and well spaced colours here without
     # resorting to HSV colour space mapping. Meh. Can't be arsed right now…
-    counts.each do |swear,count|
-      pc.data swear,count
+    counts.each do |swear|
+      pc.data swear.swear,swear.all_count.to_i
     end
     pc.to_url
   end
@@ -56,17 +56,17 @@ end
 get '/graphs/overview.png' do
   require 'google_chart'
   
-  redirect pie_chart(Swear.count(:group => :swear,:limit => 15)), 307
+  redirect pie_chart(Swear.find(:all,:select => "swear,SUM(count) as all_count",:order => "all_count DESC",:group => :swear,:limit => 15)), 307
 end
 
 get '/graphs/:user.png' do
   require 'google_chart'
   
-  redirect pie_chart(Swear.count(:conditions => ["user = ?",params[:user]], :group => :swear,:limit => 15),"Swears by #{params[:user]}"), 307
+  redirect pie_chart(Swear.find(:all,:conditions => ["user = ?",params[:user]],:select => "swear,SUM(count) as all_count",:order => "all_count DESC",:group => :swear,:limit => 15),"Swears by #{params[:user]}"), 307
 end
 
 get '/graphs/:user/:repo.png' do
   require 'google_chart'
   
-  redirect pie_chart(Swear.count(:conditions => ["user = ? AND repo = ?",params[:user],params[:repo]], :group => :swear,:limit => 15),"Swears by #{params[:user]} in #{params[:repo]}"), 307
+  redirect pie_chart(Swear.find(:all,:conditions => ["user = ? AND repo = ?",params[:user],params[:repo]],:select => "swear,SUM(count) as all_count",:order => "all_count DESC",:group => :swear,:limit => 15),"Swears by #{params[:user]} in #{params[:repo]}"), 307
 end
