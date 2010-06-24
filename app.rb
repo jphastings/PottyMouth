@@ -51,7 +51,7 @@ end
 get '/graphs/overview.png' do
   require 'google_chart'
   
-  redirect pie_chart(Swear.count(:group => :swear)), 307
+  redirect pie_chart(Swear.count(:group => :swear,:limit => 15)), 307
 end
 
 =begin
