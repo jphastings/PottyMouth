@@ -61,3 +61,13 @@
 			%h2 Do you foo?
 			:markdown
 				Are you looking at this miserable HTML and thinking "I have the way of code, I could make this look awesome!" — you should! Just fork [the github repo](http://github.com/jphastings/PottyMouth) and make whatever changes you think are suitably foul mouthed, then send a pull request and I'll test & update.
+		:javascript
+		  	var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-17129593-1']);
+			_gaq.push(['_trackPageview']);
+
+			(function() {
+				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
