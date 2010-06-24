@@ -7,7 +7,7 @@ test:
     adapter: postgresql
     host: localhost
     username: jp
-    database: linkit
+    database: pottymouth
 production:
     adapter: sqlite3
     database: db/development.sqlite3

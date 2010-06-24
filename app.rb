@@ -8,15 +8,11 @@ set :sass, {:style => :compact }
 
 helpers do
   def pie_chart(counts)
-    graph = ""
-    GoogleChart::PieChart.new('540x400', "Swears",false) do |pc|
-      counts.each do |swear,count|
-        pc.data swear,count
-
-      end
-      graph = pc.to_url
+    pc = GoogleChart::PieChart.new('540x400', "Swears in Github Repositories",false)
+    counts.each do |swear,count|
+      pc.data swear,count
     end
-    graph
+    pc.to_url
   end
 end
 
@@ -47,7 +43,7 @@ get '/graphs/overview.png' do
   redirect pie_chart(Swear.count(:group => :swear)), 307
 end
 
-#=begin
+=begin
 get '/external/github/:user/:repo' do
   require 'search_and_update'
   check_repo(
@@ -57,4 +53,4 @@ get '/external/github/:user/:repo' do
     :hash   => "" # need to change this?
   )
 end
-#=end
+=end
