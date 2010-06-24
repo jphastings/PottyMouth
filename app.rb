@@ -16,6 +16,8 @@ helpers do
   end
 end
 
+# Github
+
 post '/posthook' do
   require 'search_and_update'
   
@@ -29,12 +31,21 @@ post '/posthook' do
   )
 end
 
+# Pages
+
 get '/' do  
   haml :home
 end
 
 get '/howto' do  
   haml :howto
+end
+
+
+# Assets
+
+get '/css/default.css' do
+  sass :default
 end
 
 get '/graphs/overview.png' do
