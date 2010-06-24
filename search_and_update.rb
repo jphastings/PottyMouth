@@ -8,7 +8,7 @@ def check_repo(details)
     words = f.read.split("\n")
     # Words should all be in lowercase
     words = words.collect do |word|
-      ["(?:[^a-zA-Z]|^)(#{word}(?:#{word[-1..-1]}?(?:ing|ed))?)","(?:[^a-zA-Z]|^)(#{word.upcase}(?:#{word.upcase[-1..-1]}?(?:ING|ED))?)","(#{word.capitalize}(?:#{word[-1..-1]}?(?:ing|ed))?)"]
+      ["(?:[^a-zA-Z]|^)(#{word}(?:#{word[-1..-1]}?(?:ing|ed|er))?)","(?:[^a-zA-Z]|^)(#{word.upcase}(?:#{word.upcase[-1..-1]}?(?:ING|ED|ER))?)","(#{word.capitalize}(?:#{word[-1..-1]}?(?:ing|ed|er))?)"]
     end.flatten
     re = Regexp.new(words.join("|"))
   end
