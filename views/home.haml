@@ -1,7 +1,54 @@
-%h1 Potty Mouth
-#content
-	:markdown
-		So there's this guy, [Max](http://twitter.com/mxcl) (he's a splendid chap, by the way) who nonchalantly [asked twitter](http://twitter.com/mxcl/status/16838493726) to make him a tool for measuring the profanity of code-bases.
+!!! 5
+%html
+	%head
+		%title You're such a Potty Mouth!
+	%body
+		#content
+			%h1 Potty Mouth
+			:markdown
+				So there's this guy, [Max](http://twitter.com/mxcl) (he's a splendid chap, by the way) who nonchalantly [asked twitter](http://twitter.com/mxcl/status/16838493726) to make him a tool for measuring the profanity of code-bases.
 
-		This is phase one. It probably won't work most of the time. But it sometimes it does, and then it tells you who the naughtiest developer is, and the most dastardly codebase.
-	%img{:src => '/graphs/overview.png'}
+				This is phase one. It probably won't work most of the time. But it sometimes it does, and then it tells you who the naughtiest developer is, and the most dastardly codebase.
+				
+				Want to have your repo monitored? [Find out how](/howto).
+			%img{:src => '/graphs/overview.png'}
+			%h2 Cheeky Repositories
+			%table
+				%tr
+					%th Rank
+					%th User
+					%th Repo
+					%th Swears
+				- n = 0
+				- add = 1
+				- oldcount = nil
+				- Swear.find_by_sql("SELECT repo,user,SUM(count) as all_count FROM swears WHERE 1 GROUP BY repo, user ORDER BY count LIMIT 10").each do |repo|
+				- if oldcount == repo.all_count; add += 1; else; n += add; add = 1; end; oldcount = repo.all_count
+					%tr
+						%td
+							= n
+						%td
+							= repo.user
+						%td
+							= repo.repo
+						%td
+							= Swear.find_by_sql(["SELECT swear FROM swears WHERE user = ? AND repo = ? ORDER BY count DESC LIMIT 3",repo.user,repo.repo]).collect{|s| s.swear}.join(", ")
+			
+			%h2 Cheeky People
+			%table
+				%tr
+					%th Rank
+					%th User
+					%th Swears
+				- n = 0
+				- add = 1
+				- oldcount = nil
+				- Swear.find_by_sql("SELECT user,SUM(count) as all_count FROM swears WHERE 1 GROUP BY user ORDER BY count LIMIT 10").each do |repo|
+				- if oldcount == repo.all_count; add += 1; else; n += add; add = 1; end; oldcount = repo.all_count
+					%tr
+						%td
+							= n
+						%td
+							= repo.user
+						%td
+							= Swear.find_by_sql(["SELECT swear FROM swears WHERE user = ? ORDER BY count DESC LIMIT 3",repo.user]).collect{|s| s.swear}.join(", ")

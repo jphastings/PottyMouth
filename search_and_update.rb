@@ -2,10 +2,7 @@ require 'git'
 require 'fileutils'
 
 
-def check_repo(details)
-  # Don't do the same one twice
-  return if Repo.count(:conditions => ["name = ? AND user = ? and repo_hash = ?",details[:repo],details[:user],details[:hash]]) > 0
-    
+def check_repo(details)    
   re = //
   open("words.txt") do |f|
     words = f.read.split("\n")
@@ -16,24 +13,26 @@ def check_repo(details)
     re = Regexp.new(words.join("|"))
   end
 
-  repo = File.join('tmp',details[:hash])
+  repo = File.join('tmp',(0..32).map{ [('a'..'z'),('A'..'Z')].map{|i| i.to_a}.flatten[rand(52)]  }.join)
   
   begin
     Git.clone(details[:giturl],repo)
 
     FileUtils.rm_rf(File.join(repo,'.git')) # don't need to worry about making sure there's no foul play here, heroku is read-only
     
-    r = Repo.create(:name => details[:repo], :user => details[:user],:repo_hash => details[:hash])
-  
-    Dir.glob(File.join(repo,'**/**')) do |file|
-      if !File.directory? file
-        f = open(file)
-        f.read.scan(re).each do |swear|
-          s = r.swears.find_or_create_by_swear(swear.compact[0].downcase)
-          s.count += 1
-          s.save
+    Swear.transaction do
+      Swear.destroy_all(['repo = ? AND user = ?',details[:repo],details[:user]])
+          
+      Dir.glob(File.join(repo,'**/**')) do |file|
+        if !File.directory? file
+          f = open(file)
+          f.read.scan(re).each do |swear|
+            s = Swear.find_or_create_by_repo_and_user_and_swear(details[:repo],details[:user],swear.compact[0].downcase)
+            s.count += 1
+            s.save
+          end
+          f.close
         end
-        f.close
       end
     end
   ensure

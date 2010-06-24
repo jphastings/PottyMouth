@@ -33,8 +33,12 @@ post '/posthook' do
   )
 end
 
-get '/' do
+get '/' do  
   haml :home
+end
+
+get '/howto' do  
+  haml :howto
 end
 
 get '/graphs/overview.png' do
@@ -43,7 +47,7 @@ get '/graphs/overview.png' do
   redirect pie_chart(Swear.count(:group => :swear)), 307
 end
 
-=begin
+#=begin
 get '/external/github/:user/:repo' do
   require 'search_and_update'
   check_repo(
@@ -53,4 +57,4 @@ get '/external/github/:user/:repo' do
     :hash   => "" # need to change this?
   )
 end
-=end
+#=end
