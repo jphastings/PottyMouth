@@ -7,8 +7,10 @@ require 'haml'
 set :sass, {:style => :compact }
 
 helpers do
-  def pie_chart(counts)
-    pc = GoogleChart::PieChart.new('540x400', "Swears in Github Repositories",false)
+  def pie_chart(counts, title = "Swears in Github Repositories")
+    pc = GoogleChart::PieChart.new('540x400', title,false)
+    # How the shitsticks am I supposed to get lots of exciting and well spaced colours here without
+    # resorting to HSV colour space mapping. Meh. Can't be arsed right now…
     counts.each do |swear,count|
       pc.data swear,count
     end
@@ -41,6 +43,9 @@ get '/howto' do
   haml :howto
 end
 
+get '/details/:user/:repo' do
+  
+end
 
 # Assets
 
@@ -54,14 +59,14 @@ get '/graphs/overview.png' do
   redirect pie_chart(Swear.count(:group => :swear,:limit => 15)), 307
 end
 
-=begin
-get '/external/github/:user/:repo' do
-  require 'search_and_update'
-  check_repo(
-    :giturl => "git://github.com/#{params[:user]}/#{params[:repo]}.git",
-    :repo   => params[:repo],
-    :user   => params[:user],
-    :hash   => "" # need to change this?
-  )
+get '/graphs/:user.png' do
+  require 'google_chart'
+  
+  redirect pie_chart(Swear.count(:conditions => ["user = ?",params[:user]], :group => :swear,:limit => 15),"Swears by #{params[:user]}"), 307
 end
-=end
+
+get '/graphs/:user/:repo.png' do
+  require 'google_chart'
+  
+  redirect pie_chart(Swear.count(:conditions => ["user = ? AND repo = ?",params[:user],params[:repo]], :group => :swear,:limit => 15),"Swears by #{params[:user]} in #{params[:repo]}"), 307
+end
