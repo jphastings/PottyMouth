@@ -14,55 +14,11 @@
 				
 				Want to have your repo monitored? [Find out how](/howto).
 			%img{:src => '/graphs/overview.png'}
-			-#	
-				%h2 Cheeky Repositories
-				%table
-					%tr
-						%th Rank
-						%th User
-						%th Repo
-						%th Swears
-					- n = 0
-					- add = 1
-					- oldcount = nil
-					- Swear.find_by_sql("SELECT repo, user, SUM(count) as all_count FROM swears WHERE true GROUP BY repo, user ORDER BY all_count LIMIT 10").each do |repo|
-					- p repo
-					- p repo.repo
-					- p repo.user
-					- if oldcount == repo.all_count; add += 1; else; n += add; add = 1; end; oldcount = repo.all_count
-						%tr
-							%td
-								= n
-							%td
-								= repo.user
-							%td
-								= repo.repo
-							%td
-								= Swear.find_by_sql(["SELECT swear FROM swears WHERE user = ? AND repo = ? ORDER BY count DESC LIMIT 3",repo.user,repo.repo]).collect{|s| s.swear}.join(", ")
-			
-				%h2 Cheeky People
-				%table
-					%tr
-						%th Rank
-						%th User
-						%th Swears
-					- n = 0
-					- add = 1
-					- oldcount = nil
-					- Swear.find_by_sql("SELECT user,SUM(count) as all_count FROM swears WHERE true GROUP BY user ORDER BY all_count LIMIT 10").each do |repo|
-					- if oldcount == repo.all_count; add += 1; else; n += add; add = 1; end; oldcount = repo.all_count
-						%tr
-							%td
-								= n
-							%td
-								= repo.user
-							%td
-								= Swear.find_by_sql(["SELECT swear FROM swears WHERE user = ? ORDER BY count DESC LIMIT 3",repo.user]).collect{|s| s.swear}.join(", ")
 			%h2 Do you foo?
 			:markdown
 				Are you looking at this miserable HTML and thinking "I have the way of code, I could make this look awesome!" — you should! Just fork [the github repo](http://github.com/jphastings/PottyMouth) and make whatever changes you think are suitably foul mouthed, then send a pull request and I'll test & update.
 		:javascript
-		  	var _gaq = _gaq || [];
+			var _gaq = _gaq || [];
 			_gaq.push(['_setAccount', 'UA-17129593-1']);
 			_gaq.push(['_trackPageview']);
 
@@ -70,4 +26,4 @@
 				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
 				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
 				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-			})();
+				})();
