@@ -43,8 +43,12 @@ get '/howto' do
   haml :howto
 end
 
+get '/details/:user' do
+  "<h1>#{params[:user]}</h1><img src=\"/graphs/#{params[:user]}.png\"/><a href=\"/\">Backward!</a>"
+end
+
 get '/details/:user/:repo' do
-  
+  "<h1>#{params[:user]} : #{params[:repo]}</h1><img src=\"/graphs/#{params[:user]}/#{params[:repo]}.png\"/><a href=\"/\">Backward!</a>"
 end
 
 # Assets
@@ -56,17 +60,17 @@ end
 get '/graphs/overview.png' do
   require 'google_chart'
   
-  redirect pie_chart(Swear.find(:all,:select => "swear,SUM(count) as all_count",:order => "all_count DESC",:group => :swear,:limit => 15)), 307
+  redirect pie_chart(Swear.find(:all,:select => "swear,SUM(count) as all_count",:order => "all_count DESC",:group => :swear,:limit => 30)), 307
 end
 
 get '/graphs/:user.png' do
   require 'google_chart'
   
-  redirect pie_chart(Swear.find(:all,:conditions => ["user = ?",params[:user]],:select => "swear,SUM(count) as all_count",:order => "all_count DESC",:group => :swear,:limit => 15),"Swears by #{params[:user]}"), 307
+  redirect pie_chart(Swear.find(:all,:conditions => ["user = ?",params[:user]],:select => "swear,SUM(count) as all_count",:order => "all_count DESC",:group => :swear,:limit => 15),"Top 15 swears by #{params[:user]}"), 307
 end
 
 get '/graphs/:user/:repo.png' do
   require 'google_chart'
   
-  redirect pie_chart(Swear.find(:all,:conditions => ["user = ? AND repo = ?",params[:user],params[:repo]],:select => "swear,SUM(count) as all_count",:order => "all_count DESC",:group => :swear,:limit => 15),"Swears by #{params[:user]} in #{params[:repo]}"), 307
+  redirect pie_chart(Swear.find(:all,:conditions => ["user = ? AND repo = ?",params[:user],params[:repo]],:select => "swear,SUM(count) as all_count",:order => "all_count DESC",:group => :swear,:limit => 15),"Top 15 swears by #{params[:user]} in #{params[:repo]}"), 307
 end

@@ -14,6 +14,13 @@
 				
 				Want to have your repo monitored? [Find out how](/howto).
 			%img{:src => '/graphs/overview.png'}
+			%h2 Recently altered
+			%ul
+				- Swear.find(:all,:order => "updated_at DESC",:limit => 500).collect{|r| {:user => r.user,:repo => r.repo} }.uniq.each do |recent|
+					%li
+						%a{:href=>"/details/#{recent[:user]}"}=recent[:user]
+						-
+						%a{:href=>"/details/#{recent[:user]}/#{recent[:repo]}"}=recent[:repo]
 			%h2 Do you foo?
 			:markdown
 				Are you looking at this miserable HTML and thinking "I have the way of code, I could make this look fucking awesome!" — you should! Just fork [the github repo](http://github.com/jphastings/PottyMouth) and make whatever changes you think are suitably foul mouthed, then send a pull request and I'll test & update.
