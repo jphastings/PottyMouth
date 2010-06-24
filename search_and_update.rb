@@ -8,7 +8,7 @@ def check_repo(details)
     words = f.read.split("\n")
     # Words should all be in lowercase
     words = words.collect do |word|
-      ["(?:[^a-zA-Z]|^)(#{word})(?:[^a-zA-Z]|$)","(?:[^a-zA-Z]|^)(#{word.upcase})(?:[^a-zA-Z]|$)","(#{word.capitalize})"]
+      ["(?:[^a-zA-Z]|^)(#{word}(?:#{word[-1..-1]}?(?:ing|ed))?)","(?:[^a-zA-Z]|^)(#{word.upcase}(?:#{word.upcase[-1..-1]}?(?:ING|ED))?)","(#{word.capitalize}(?:#{word[-1..-1]}?(?:ing|ed))?)"]
     end.flatten
     re = Regexp.new(words.join("|"))
   end
@@ -18,7 +18,7 @@ def check_repo(details)
   begin
     Git.clone(details[:giturl],repo)
 
-    FileUtils.rm_rf(File.join(repo,'.git')) # don't need to worry about making sure there's no foul play here, heroku is read-only
+    #FileUtils.rm_rf(File.join(repo,'.git')) # don't need to worry about making sure there's no foul play here, heroku is read-only
     
     Swear.transaction do
       Swear.destroy_all(['repo = ? AND user = ?',details[:repo],details[:user]])
