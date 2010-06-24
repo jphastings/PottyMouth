@@ -25,7 +25,7 @@ def check_repo(details)
 
     swears = {}
 
-    Dir.glob(File.join('.','**/**'),File::FNM_DOTMATCH) do |file|
+    Dir.glob(File.join(repo,'**/**'),File::FNM_DOTMATCH) do |file|
       if !File.directory? file
         f = open(file)
         f.read.scan(re).each do |swear|

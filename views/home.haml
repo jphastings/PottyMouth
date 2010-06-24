@@ -16,7 +16,9 @@
 			%img{:src => '/graphs/overview.png'}
 			%h2 Recently altered
 			%ul
-				- Swear.find(:all,:order => "updated_at DESC",:limit => 500).collect{|r| {:user => r.user,:repo => r.repo} }.uniq.each do |recent|
+				- Swear.find(:all,:order => "updated_at DESC",:limit => 500).collect{|r| "#{r.user}||#{r.repo}" }.uniq.each do |recent|
+				- recent = recent.split("||")
+				- recent = {:user => recent[0],:repo => recent[1]}
 					%li
 						%a{:href=>"/details/#{recent[:user]}"}=recent[:user]
 						-
