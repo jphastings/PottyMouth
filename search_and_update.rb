@@ -21,20 +21,24 @@ def check_repo(details)
     # Searches commits now too, I think?
     #FileUtils.rm_rf(File.join(repo,'.git')) # don't need to worry about making sure there's no foul play here, heroku is read-only
     
-    Swear.transaction do
-      Swear.destroy_all(['repo = ? AND user = ?',details[:repo],details[:user]])
-          
-      Dir.glob(File.join(repo,'**/**')) do |file|
-        if !File.directory? file
-          f = open(file)
-          f.read.scan(re).each do |swear|
-            s = Swear.find_or_create_by_repo_and_user_and_swear(details[:repo],details[:user],swear.compact[0].downcase)
-            s.count += 1
-            s.save
-          end
-          f.close
+    Swear.find_by_sql(['DELETE FROM swears WHERE repo = ? AND user = ?',details[:repo],details[:user]])
+
+    swears = {}
+
+    Dir.glob(File.join('.','**/**'),File::FNM_DOTMATCH) do |file|
+      if !File.directory? file
+        f = open(file)
+        f.read.scan(re).each do |swear|
+          $stderr.puts "Found #{swear.compact[0].downcase} in #{file}"
+          swears[swear.compact[0].downcase] = (swears[swear.compact[0].downcase] || 0) + 1
         end
+        f.close
       end
+    end
+
+    swears.each_pair do |swear,count|
+      s = Swear.create(:repo => details[:repo],:user => details[:user],:swear => swear,:count => count)
+      s.save
     end
   ensure
     FileUtils.rm_rf(repo)
