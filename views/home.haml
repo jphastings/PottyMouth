@@ -22,7 +22,7 @@
 				- n = 0
 				- add = 1
 				- oldcount = nil
-				- Swear.find_by_sql("SELECT repo,user,SUM(count) as all_count FROM swears WHERE true GROUP BY repo, user ORDER BY count LIMIT 10").each do |repo|
+				- Swear.find_by_sql("SELECT repo,user,SUM(count) as all_count FROM swears WHERE true GROUP BY repo, user ORDER BY all_count LIMIT 10").each do |repo|
 				- if oldcount == repo.all_count; add += 1; else; n += add; add = 1; end; oldcount = repo.all_count
 					%tr
 						%td
@@ -43,7 +43,7 @@
 				- n = 0
 				- add = 1
 				- oldcount = nil
-				- Swear.find_by_sql("SELECT user,SUM(count) as all_count FROM swears WHERE true GROUP BY user ORDER BY count LIMIT 10").each do |repo|
+				- Swear.find_by_sql("SELECT user,SUM(count) as all_count FROM swears WHERE true GROUP BY user ORDER BY all_count LIMIT 10").each do |repo|
 				- if oldcount == repo.all_count; add += 1; else; n += add; add = 1; end; oldcount = repo.all_count
 					%tr
 						%td
