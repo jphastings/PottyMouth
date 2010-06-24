@@ -17,7 +17,8 @@ def check_repo(details)
   
   begin
     Git.clone(details[:giturl],repo)
-
+    
+    # Searches commits now too, I think?
     #FileUtils.rm_rf(File.join(repo,'.git')) # don't need to worry about making sure there's no foul play here, heroku is read-only
     
     Swear.transaction do
